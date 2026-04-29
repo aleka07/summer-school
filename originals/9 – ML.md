@@ -161,7 +161,7 @@ Grafana dashboard
 ```bash
 cd ~/test/openegiz/data-generator
 source venv/bin/activate
-python3 tdengine_solar_bridge.py --site-id SITE_001
+python3 tdengine_solar_bridge.py --site-id all
 ```
 
 Если он уже запущен в фоне, просто смотрим лог:
@@ -203,7 +203,16 @@ ml_model_version
 ml_last_run
 ```
 
-На этом занятии мы работаем только с `summerschool:solar-site-001`, поэтому остальные станции не трогаем. Если не добавить features руками, Ditto все равно может создать их через MQTT message, но для занятия лучше показать это в интерфейсе, чтобы люди понимали структуру twin.
+То же самое можно добавить для:
+
+```text
+summerschool:solar-site-002
+summerschool:solar-site-003
+summerschool:solar-site-004
+summerschool:solar-site-005
+```
+
+Если не добавить руками, Ditto все равно может создать features через MQTT message, но для занятия лучше показать это в интерфейсе, чтобы люди понимали структуру twin.
 
 ---
 
@@ -247,13 +256,17 @@ from influxdb_client import InfluxDBClient
 DEFAULT_INFLUX_URL = "http://localhost:30716"
 DEFAULT_INFLUX_ORG = "opentwins"
 DEFAULT_INFLUX_BUCKET = "default"
-DEFAULT_INFLUX_TOKEN = "PASTE_YOUR_INFLUX_TOKEN_HERE"
+DEFAULT_INFLUX_TOKEN = "Hjh3ysMQ6evK=qqpFSYqn-s3JGovJLfHxyCDM=eNNZkdM-uuro93dNtJcodejLYYob2geKQ/29z3Kxui=y6FlL?dZeU9EFRxrYn284V/kZG5==jxLVAMJrYOv?LF79ahwIbhvstMN6gmfQ3DH7/IzUB7VlBZK-cd8aN7YqiFrYRLkBUv7H0QkbqPxgf2dMgCMCwZaLMk9RUeMaBfx2lQ=Mq1EEJJw-Jp!BmpCDnhlc!6D22PaE=Y3sgWWNhRv8oP"
 
 DEFAULT_MQTT_HOST = "localhost"
 DEFAULT_MQTT_PORT = 30511
 
 SITE_THINGS = [
     "summerschool:solar-site-001",
+    "summerschool:solar-site-002",
+    "summerschool:solar-site-003",
+    "summerschool:solar-site-004",
+    "summerschool:solar-site-005",
 ]
 
 
@@ -436,7 +449,10 @@ from(bucket: "{self.args.influx_bucket}")
     def run(self):
         self.connect()
 
-        things = [self.args.thing_id]
+        if self.args.thing_id == "all":
+            things = SITE_THINGS
+        else:
+            things = [self.args.thing_id]
 
         try:
             while self.running:
@@ -502,8 +518,6 @@ Ctrl+O → Enter → Ctrl+X
 chmod +x ml_solar_service.py
 ```
 
-В строке `DEFAULT_INFLUX_TOKEN` вставляем токен вашей установки. Реальный токен лучше не хранить в публичной GitHub-репе.
-
 ---
 
 ## 5. Запускаем ML один раз
@@ -545,16 +559,22 @@ ml_last_run
 
 ## 6. Запускаем ML постоянно
 
-Для нашей станции:
+Для одной станции:
 
 ```bash
 python3 ml_solar_service.py --thing-id summerschool:solar-site-001 --interval 15
 ```
 
+Для всех 5 станций:
+
+```bash
+python3 ml_solar_service.py --thing-id all --interval 15
+```
+
 Запуск в фоне:
 
 ```bash
-nohup python3 ml_solar_service.py --thing-id summerschool:solar-site-001 --interval 15 > ml_solar_service.log 2>&1 &
+nohup python3 ml_solar_service.py --thing-id all --interval 15 > ml_solar_service.log 2>&1 &
 ```
 
 Смотреть логи:
@@ -620,7 +640,7 @@ kill PID
 что происходит с мощностью?
 есть ли аномалия?
 какой статус у объекта?
-какую рекомендацию дает ML?
+что говорит ML по всем станциям?
 ```
 
 Итого делаем всего 4 панели:
@@ -629,7 +649,7 @@ kill PID
 1. Time series: Actual vs Expected vs ML Prediction
 2. Gauge: Anomaly Score
 3. Stat: Health Status + Risk Level
-4. Table: ML summary по SITE_001
+4. Table: ML summary по всем станциям
 ```
 
 ---
@@ -772,14 +792,19 @@ high   → HIGH, red
 
 ---
 
-## 8.4 Таблица ML по SITE_001
+## 8.4 Таблица ML по всем станциям
+
+Если ML сервис запущен для всех:
+
+```bash
+python3 ml_solar_service.py --thing-id all --interval 15
+```
 
 Делаем table:
 
 ```flux
 from(bucket: "default")
   |> range(start: -2m)
-  |> filter(fn: (r) => r["thingId"] == "summerschool:solar-site-001")
   |> filter(fn: (r) =>
        r["_field"] == "value_ml_predicted_power_mw_properties_value" or
        r["_field"] == "value_ml_expected_power_gap_mw_properties_value" or
@@ -812,7 +837,7 @@ value_ml_risk_level_properties_value           → Risk
 value_ml_recommendation_properties_value       → Recommendation
 ```
 
-Эта таблица заменяет отдельную панель `ML Recommendation`. Так проще: прогноз, риск и рекомендация видны в одном месте.
+Эта таблица заменяет отдельную панель `ML Recommendation`. Так проще: все рекомендации сразу видны в одном месте.
 
 ---
 
@@ -828,7 +853,7 @@ Row 2:
 [Actual vs Expected vs ML Prediction]
 
 Row 3:
-[ML summary table по SITE_001]
+[ML summary table по всем solar sites]
 ```
 
 Этого достаточно, чтобы показать ML идею.

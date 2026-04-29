@@ -1,131 +1,73 @@
-# День 5-6. 3D-сцена для OpenEgiz
 
-Сегодня мы делаем 3D-представление нашего цифрового двойника. У нас уже есть двойник лампочки, генератор данных и Grafana. Теперь добавляем визуальную часть: Unity-сцену, которую потом встроим в OpenEgiz через Grafana.
+Unity
 
-Главная идея такая: цифровой двойник — это не только таблица параметров. Мы можем показать объект в 3D и рядом выводить его актуальные значения.
-
-## Установка Unity
-
-Сначала скачиваем Unity Hub под вашу операционную систему.
+качаем unity для нашей машины, для вашей ОС
 
 ![[Pasted image 20260427162628.png]]
 
-Устанавливаем Unity Hub и авторизуемся.
+скачали, теперь устанавливаем 
 
+
+авторизуемся
 ![[Pasted image 20260427162747.png]]
 
-После этого ждем, пока Unity загрузится и установится.
 
+
+Ждем загрузку Unity
 ![[Pasted image 20260427162904.png]]
 
-Пока Unity устанавливается, подготовим 3D-модель нашей лампочки.
 
-## Создание 3D-модели
+а пока грузится unity сделаем 3д модельку нашей лампочки
 
-Для учебного проекта нам не нужна идеальная промышленная 3D-модель. Нам достаточно модели, которая визуально похожа на лампочку и которую можно загрузить в Unity.
+заходим в нашего телеграм бота, он бесплатный @img_2_3d_bot
 
-Я использую Telegram-бот:
+закидываем в него нашу картинку лампочки
 
-```text
-@img_2_3d_bot
-```
+скачали модельку проверели их в онлайн viewer 
 
-В него отправляем картинку лампочки и получаем 3D-модель.
+https://3dviewer.net/ для obj
 
-После скачивания модель лучше проверить в онлайн-viewer:
+https://gltf-viewer.donmccurdy.com/ для glb
 
-```text
-OBJ: https://3dviewer.net/
-GLB: https://gltf-viewer.donmccurdy.com/
-```
 
-Если модель открывается в viewer, значит дальше можно идти в Unity.
+модели есть теперь идем в unity
 
-## Проверяем Web Build Support
-
-Нам нужен WebGL build, потому что потом Unity-сцену мы будем открывать внутри Grafana/OpenEgiz.
-
-В Unity Hub слева открываем `Installs`, нажимаем `Manage`, потом `Add modules` и проверяем, установлен ли `Web Build Support`.
-
+заходим в install слева, жмем "Manage" дальше "add modules" и смотрим установлена ли Web Build Support поддержка, если нет то устанавливаем
 ![[Pasted image 20260427164014.png]]
-
 ![[Pasted image 20260427164110.png]]
 
-Если Web Build Support не установлен, ставим его.
-
-## Создаем Unity-проект
-
-Слева открываем `Projects`, нажимаем `New Project`.
-
+слева Projects дальше New Project
 ![[Pasted image 20260429105831.png]]
 
-Выбираем 3D Universal шаблон.
-
+создали 3д universal шаблон
 ![[Pasted image 20260429105847.png]]
-
-После создания проекта открываем настройки билда.
-
+Files надо выбрать вот это
 ![[Pasted image 20260427172033.png]]
-
-Переключаем платформу на Web.
-
+вот здесьь свитчаемся на web
 ![[Pasted image 20260427172106.png]]
 
-Дальше идем в:
-
-```text
-Player -> Publishing Settings -> Compression Format
-```
-
-Ставим:
-
-```text
-Disabled
-```
-
+Player –> Publishing Settings –> Compression Formant: Disabled
 ![[Pasted image 20260427172220.png]]
 
-Это важно, чтобы потом WebGL build нормально отдавался с нашего сервера.
-
-## Импорт модели
-
-Внизу в `Assets` создаем папку:
-
-```text
-models
-```
-
+снизу в окне Assets создадим папку models
 ![[Pasted image 20260427164641.png]]
 
-Перетаскиваем туда наш `.obj` файл лампочки.
 
+закинем в нее наш obj файл лампочки (ссылку на наш объект лампочки)
 ![[Pasted image 20260427165235.png]]
 
-Теперь добавляем модель на сцену.
 
-Самый критичный момент: объект в Unity нужно назвать так же, как называется цифровой двойник.
 
-В нашем случае:
-
-```text
-summerschool:lightbulb-01
-```
-
+нужно переимновать лампочку под thingid с графаны это (критично важно)
 ![[Pasted image 20260427165628.png]]
+summerschool:lightbulb-01
+в моем случае
 
-Если в названии будет лишний пробел или другая буква, связка может не сработать. Поэтому `thingId` копируем внимательно.
 
-## Скрипт приема данных
 
-Теперь создаем C# script. Назовем его:
-
-```text
-UniversalReceiver
-```
-
+сейчас создадим скрипт на C# (на него тоже ссылку надо дать)
 ![[Pasted image 20260427165718.png]]
-
-Открываем созданный файл и вставляем код:
+дважды нажмите на созданный файл и он откроектся в вашем текстовом редакторе
 
 ```C#
 using UnityEngine;
@@ -320,53 +262,29 @@ void Start()
 }
 ```
 
-Теперь перетаскиваем этот скрипт из `Assets` на объект лампочки в сцене.
+перетягиваем наш код из Assets на наш объект в сцене
 
-## Текст рядом с объектом
-
-Создаем `TextMeshPro`, чтобы показывать значения рядом с моделью.
-
-Правая кнопка мыши по 3D-объекту слева в `Hierarchy`, дальше выбираем текстовый объект.
+далее создаем text mesh pro, правая кнопка мыши на 3д объект слева, в списке
 
 ![[Pasted image 20260427170655.png]]
 
-Если Unity попросит импортировать TMP Essentials, импортируем верхний вариант.
-
+импортируем только верхний
 ![[Pasted image 20260427170313.png]]
-
-Выбираем `Canvas` слева в `Hierarchy`. Справа ставим:
-
-```text
-Render Mode: World Space
-Event Camera: Main Camera
-```
-
+Нажать Canvas слева в Hierarchy. В меню справа надо выбрать Render mode World Space. Также Event Camera точку справа нажать выбрать main camera
 ![[Pasted image 20260429160026.png]]
 
-После этого у `Canvas` ставим `Scale`:
 
-```text
-X: 0.01
-Y: 0.01
-Z: 0.01
-```
-
-И размещаем текст за нашей лампочкой или рядом с ней.
-
+после этого Scale нашего Canvas делаем 0.01 по всем осям и ставим за нашей лампочкой
 ![[Pasted image 20260429160237.png]]
 
-Теперь выбираем лампу, на которую уже добавили `UniversalReceiver`, и в поле `Status Label` перетаскиваем созданный `Text TMP`.
 
+
+
+выбрали слева нашу лампу, справа надо заполнить Status Label, выбрав Text TMP который мы до этого создали только что
 ![[Pasted image 20260427171507.png]]
+Далее сделаем анимацию для камеры. надо добавить два скрипта.
 
-## Камера и zoom
-
-Теперь сделаем простую навигацию камеры: кликаем по лампочке, камера приближается; нажимаем правую кнопку мыши или `Esc`, камера возвращается назад.
-
-Создаем два скрипта.
-
-`ClickToZoom.cs`:
-
+**ClickToZoom.cs**
 ```cs
 using UnityEngine;
 
@@ -392,8 +310,7 @@ public class ClickToZoom : MonoBehaviour
 }
 ```
 
-`CameraNavigator.cs`:
-
+**CameraNavigator.cs**
 ```cs
 using UnityEngine;
 
@@ -442,175 +359,103 @@ public class CameraNavigator : MonoBehaviour
 }
 ```
 
-Добавляем оба скрипта в `Assets`.
-
+добавили эти два скрипта в наши Assets
 ![[Снимок экрана — 2026-04-29 в 16.06.27.png]]
 
-## Collider на лампочке
-
-Чтобы клик по объекту работал, у модели должен быть collider.
-
-Выбираем лампу в `Hierarchy`, справа нажимаем:
-
-```text
-Add Component -> Box Collider
-```
-
+Выбираем нашу лампу в Иерархии слева, далее add component –> Box Colider
 ![[Снимок экрана — 2026-04-29 в 16.07.59.png]]
-
 ![[Pasted image 20260429160858.png]]
 
-После этого настраиваем размер collider так, чтобы он покрывал лампочку.
-
+Жмем 1ое, и далее натягиваем куб на нашу лампочку
 ![[Снимок экрана — 2026-04-29 в 16.09.19.png]]
 
-Дальше открываем:
-
-```text
-Edit -> Project Settings
-```
-
+Edit –> Project Settings
 ![[Pasted image 20260429161410.png]]
 
-В `Player -> Other Settings -> Active Input Handling` ставим:
 
-```text
-Both
-```
-
+Player –> Other Settings –> Active input handiling –> Both
 ![[Снимок экрана — 2026-04-29 в 16.15.02.png]]
-
 ![[Снимок экрана — 2026-04-29 в 16.16.11.png]]
 
-## Точка приближения
-
-Теперь создаем `Empty` внутри объекта лампочки:
-
-```text
-Hierarchy -> summerschool:lightbulb-01 -> Create Empty
-```
-
+надо создать "Empty" внутри нашей лампочки: Hierarchy –> "summerschool:lightbulb-01" 
 ![[Pasted image 20260429161822.png]]
 
-Обязательно выбираем этот пустой объект слева в `Hierarchy`.
 
+ОБЯЗАТЕЛЬНО выбрать пустой обеъкт слева в Иерархии 
 ![[Pasted image 20260429163351.png]]
+В самой 3д сцене, ЗАЖАВ ПКМ (Правую Кнопку Мыши) летим ближе к объекту (используем WASD для управления). как только подлетели ближе и решили что ракурс удобный жмем шорткат:
 
-В сцене зажимаем правую кнопку мыши и подлетаем ближе к объекту. Для движения используем `WASD`. Когда нашли удобный ракурс, нажимаем:
+- **Windows:** `Ctrl + Shift + F`
+    
+- **Mac:** `Cmd + Shift + F`
 
-```text
-Windows: Ctrl + Shift + F
-Mac: Cmd + Shift + F
-```
+справа должны увидеть что координаты поменялись. на те на которые мы подлетели
 
-После этого справа должны измениться координаты выбранного empty object. Переименовываем его:
+объект переименовываем его в zoomed_view
 
-```text
-zoomed_view
-```
 
-Теперь выбираем лампу, добавляем на нее скрипт `ClickToZoom`, и в поле `My View Point` перетаскиваем `zoomed_view`.
 
+
+далее, выбираем нашу лампу (шаг 1), перетаскиваем наш скрипт ClickToZoom (шаг 2), и выбираем ранее созданный zoomed_view на "My View Point"
 ![[Снимок экрана — 2026-04-29 в 16.11.25.png]]
 
-## Общий вид камеры
 
-Теперь в сцене отлетаем назад, чтобы был общий вид. В `Hierarchy` создаем еще один `Empty Object`, но уже глобально, не внутри лампы.
+Снова в нашей сцене зажав ПКМ отлетаем назад. дав больше места для камеры/обзора камеры. в Hierarchy слева уже глобально вне нашей лампы снова создаем Empty Object, назовем его global_view. выбрав его снова жмем шорткат
 
-Называем его:
-
-```text
-global_view
-```
-
-Снова выбираем удобный общий ракурс и нажимаем:
-
-```text
-Windows: Ctrl + Shift + F
-Mac: Cmd + Shift + F
-```
+- **Windows:** `Ctrl + Shift + F`
+    
+- **Mac:** `Cmd + Shift + F`
 
 ![[Снимок экрана — 2026-04-29 в 16.25.33.png]]
 
-Дальше:
 
-1. Выбираем `Main Camera`.
-2. Перетаскиваем скрипт `CameraNavigator` в компоненты камеры.
-3. В `Overview Point` выбираем `global_view`.
-
+Далее
+1 – выбрали Main Camera
+2 – перетянули скрипт из  "CameraNavigator" направо в компоненты Main Camera
+3 – Выбрали Overview Point - global_view
 ![[Снимок экрана — 2026-04-29 в 16.27.11.png]]
 
-## Сборка WebGL
 
-Теперь билдим проект.
 
-Открываем:
 
-```text
-File -> Build Profile -> Build
-```
 
-И сохраняем build в удобную папку.
 
+Далее билдим наш проект
+
+File –> Build Profile, Build и сохраняем там где нам удобно
 ![[Pasted image 20260427172315.png]]
 
-После сборки открываем папку build. Нам нужны эти файлы:
 
+
+заходим в наш билд и нам нужны 4 этих файла
 ![[Pasted image 20260427172758.png]]
 
-Обычно это:
 
-```text
-.data
-.framework.js
-.loader.js
-.wasm
-```
-
-Названия могут отличаться, но смысл один: эти файлы нужно загрузить на сервер OpenEgiz.
-
-## Загрузка build на сервер
-
-Через SSH или Google Cloud upload закидываем файлы build на сервер.
-
+___
+2-ой день
 ![[Pasted image 20260427173232.png]]
+через ssh от гугл cloude закидываем наши 4 файла в папку build в корне проекте OpenEgiz
 
-После загрузки выходим в домашнюю директорию, пока не окажемся примерно здесь:
 
+после того как оно загрузилось надо выйтв в корень. через команду 
 ```bash
 cd ..
 ```
-
+пока мы не дойдем до ~$
 ![[Pasted image 20260427174920.png]]
+пишем команду ls видим все наши файлы и двигаем их через mv
+дальше через команду mv двигаем 
+```bash
+mv 1.framework.js 1.loader.js 1.wasm  test/openegiz/build/
+```
+названия могут быть другими но суть та же, 4 файла в test/openegiz/build/
 
-Командой `ls` проверяем, что файлы на месте. Потом переносим их в папку `build` внутри OpenEgiz:
+далее пишем `make` и жмем Tab или просто пишем `make upload-build`  
 
 ```bash
-mv 1.framework.js 1.loader.js 1.wasm test/openegiz/build/
-```
-
-Если у вас есть еще `.data` файл, его тоже переносим туда же:
-
-```bash
-mv 1.data test/openegiz/build/
-```
-
-Названия файлов могут быть другими. Главное, чтобы все файлы WebGL build оказались здесь:
-
-```text
-test/openegiz/build/
-```
-
-Дальше переходим в проект OpenEgiz и загружаем build:
-
-```bash
-cd test/openegiz
-make upload-build
-```
-
-Пример успешного вывода:
-
-```bash
+developerbeck5@super:~/test/openegiz$ make 
+copy-build     generate-data  status         upgrade        
+endpoints      install        uninstall      upload-build   
 developerbeck5@super:~/test/openegiz$ make upload-build 
 Uploading to pod: openegiz-unity-webgl-server-55647b7cc5-hdxfb
 
@@ -618,30 +463,31 @@ Uploading to pod: openegiz-unity-webgl-server-55647b7cc5-hdxfb
   Uploading: 1.framework.js
   Uploading: 1.loader.js
   Uploading: 1.wasm
+  Uploading: WebGL Build.data
+  Uploading: WebGL Build.framework.js
+  Uploading: WebGL Build.loader.js
+  Uploading: WebGL Build.wasm
 
 Access links:
   http://10.186.0.2:30530/build/1.data
   http://10.186.0.2:30530/build/1.framework.js
   http://10.186.0.2:30530/build/1.loader.js
   http://10.186.0.2:30530/build/1.wasm
+  http://10.186.0.2:30530/build/WebGL Build.data
+  http://10.186.0.2:30530/build/WebGL Build.framework.js
+  http://10.186.0.2:30530/build/WebGL Build.loader.js
+  http://10.186.0.2:30530/build/WebGL Build.wasm
+developerbeck5@super:~/test/openegiz$ 
 ```
 
+
 ![[Pasted image 20260427175119.png]]
-
-Эти ссылки потом понадобятся в Grafana, чтобы Unity-панель поняла, где лежит WebGL build.
-
-## Подключение Unity в Grafana
-
-Теперь идем в Grafana, создаем дашборд, нажимаем `Add visualisation` и выбираем `OpenTwins`.
-
+идем в графану, создаем дашборд, Add visualisation, opentwins
 ![[Pasted image 20260427175228.png]]
-
-В типе визуализации выбираем `Unity`.
-
+выбираем Unity
 ![[Pasted image 20260427175307.png]]
 
-Внизу вставляем Flux-запрос, который берет последние значения лампочки:
-
+снизу пишем вот это 
 ```flux
 from(bucket: "default")
   |> range(start: -30s)
@@ -662,22 +508,19 @@ from(bucket: "default")
   ])
 ```
 
-Справа в настройках `Visualization Unity` заполняем адреса нашего build.
 
+пишем адреса нашего билда в окно справа, Visualization Unity
 ![[Pasted image 20260427181903.png]]
 
-Заполняем поля:
 
+
+
+Заполняем поля
 ![[Pasted image 20260427182032.png]]
 
-Еще раз проверяем `thingId`. Он должен совпадать с названием объекта в Unity:
 
-```text
-summerschool:lightbulb-01
-```
 
-Лишний пробел, другая буква или другое имя объекта могут сломать отображение данных.
+надо быть очень внимательным на счет thingID имени потому что лишний пробел может все сломать
+
 
 ![[Pasted image 20260429110536.png]]
-
-В конце у нас должна получиться 3D-сцена, которая открывается в Grafana и получает актуальные данные лампочки из OpenEgiz.
