@@ -5,13 +5,13 @@
 Сначала данные были симулированные:
 
 ```text
-наш Python генератор → OpenEgiz → OpenTwins → InfluxDB → Grafana
+наш Python генератор → OpenEgiz → InfluxDB → Grafana
 ```
 
 Потом мы подключили внешний источник:
 
 ```text
-TDengine public MQTT → наш bridge → OpenEgiz → OpenTwins → InfluxDB → Grafana
+TDengine public MQTT → наш bridge → OpenEgiz → InfluxDB → Grafana
 ```
 
 Теперь делаем следующий шаг.
@@ -131,7 +131,7 @@ tdengine_solar_bridge.py
   ↓
 OpenEgiz Mosquitto
   ↓
-Ditto / OpenTwins
+Ditto / OpenEgiz
   ↓
 InfluxDB
   ↓
@@ -139,7 +139,7 @@ ml_solar_service.py
   ↓
 OpenEgiz Mosquitto
   ↓
-Ditto / OpenTwins
+Ditto / OpenEgiz
   ↓
 Grafana dashboard
 ```
@@ -182,12 +182,12 @@ curl -s -u ditto:ditto \
 
 ---
 
-## 2. Добавляем ML features в OpenTwins
+## 2. Добавляем ML features в OpenEgiz
 
 Заходим:
 
 ```text
-OpenTwins → Twins → summerschool:solar-site-001
+OpenEgiz → Twins → summerschool:solar-site-001
 ```
 
 Добавляем features:
@@ -459,7 +459,7 @@ from(bucket: "{self.args.influx_bucket}")
 
 def main():
     parser = argparse.ArgumentParser(
-        description="ML service: InfluxDB -> prediction/anomaly -> OpenEgiz/OpenTwins"
+        description="ML service: InfluxDB -> prediction/anomaly -> OpenEgiz"
     )
     parser.add_argument("--thing-id", default="summerschool:solar-site-001")
     parser.add_argument("--interval", type=float, default=15)

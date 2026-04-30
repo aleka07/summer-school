@@ -632,7 +632,7 @@ Access links:
 
 ## Подключение Unity в Grafana
 
-Теперь идем в Grafana, создаем дашборд, нажимаем `Add visualisation` и выбираем `OpenTwins`.
+Теперь идем в Grafana, создаем дашборд, нажимаем `Add visualisation` и выбираем визуализацию OpenEgiz.
 
 ![[Pasted image 20260427175228.png]]
 
