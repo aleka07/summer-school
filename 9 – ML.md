@@ -504,6 +504,11 @@ chmod +x ml_solar_service.py
 
 В строке `DEFAULT_INFLUX_TOKEN` вставляем токен вашей установки. Реальный токен лучше не хранить в публичной GitHub-репе.
 
+```bash
+kubectl get secret openegiz-influxdb2-auth \
+    -o jsonpath='{.data.admin-token}' | base64 -d
+```
+
 ---
 
 ## 5. Запускаем ML один раз
