@@ -93,6 +93,17 @@ ml_last_run
 
 И это уже будут не сырые данные с датчика, а результат анализа.
 
+Важное правило: ML сервис не должен заменять весь `/features`.
+
+Мы используем `commands/merge`, чтобы добавить или обновить только `ml_*` features. Тогда обычные solar features, которые пришли от TDengine bridge, остаются на месте.
+
+```text
+modify /features = заменить все features
+merge /features  = обновить только переданные features
+```
+
+То есть в одном twin спокойно живут и обычная телеметрия, и ML-аналитика.
+
 ---
 
 ## Почему это можно назвать ML
@@ -131,7 +142,7 @@ tdengine_solar_bridge.py
   ↓
 OpenEgiz Mosquitto
   ↓
-Ditto / OpenEgiz
+Ditto / OpenEgiz через merge /features
   ↓
 InfluxDB
   ↓
@@ -139,7 +150,7 @@ ml_solar_service.py
   ↓
 OpenEgiz Mosquitto
   ↓
-Ditto / OpenEgiz
+Ditto / OpenEgiz через merge /features/ml_*
   ↓
 Grafana dashboard
 ```
@@ -232,12 +243,14 @@ nano ml_solar_service.py
 ```python
 #!/usr/bin/env python3
 import argparse
+import base64
 import json
 import math
 import random
 import signal
 import sys
 import time
+import urllib.request
 from datetime import datetime, timezone
 
 import paho.mqtt.client as mqtt
@@ -251,6 +264,9 @@ DEFAULT_INFLUX_TOKEN = "PASTE_YOUR_INFLUX_TOKEN_HERE"
 
 DEFAULT_MQTT_HOST = "localhost"
 DEFAULT_MQTT_PORT = 30511
+DEFAULT_DITTO_URL = "http://localhost:30525"
+DEFAULT_DITTO_USER = "ditto"
+DEFAULT_DITTO_PASSWORD = "ditto"
 
 SITE_THINGS = [
     "summerschool:solar-site-001",
@@ -268,6 +284,17 @@ FIELDS = {
     "alarms": "value_active_alarms_properties_value",
 }
 
+DITTO_FEATURES = {
+    "ac_power": "ac_power_mw",
+    "expected_power": "expected_power_mw",
+    "performance_ratio": "performance_ratio",
+    "availability": "availability_percent",
+    "curtailment": "curtailment_percent",
+    "energy_today": "energy_today_mwh",
+    "irradiance": "poa_irradiance_wm2",
+    "alarms": "active_alarms",
+}
+
 
 def now_iso():
     return datetime.now(timezone.utc).isoformat()
@@ -277,7 +304,10 @@ def build_ditto_message(thing_id, features):
     namespace, name = thing_id.split(":", 1)
 
     return {
-        "topic": f"{namespace}/{name}/things/twin/commands/modify",
+        "topic": f"{namespace}/{name}/things/twin/commands/merge",
+        "headers": {
+            "content-type": "application/merge-patch+json"
+        },
         "path": "/features",
         "value": features,
     }
@@ -317,6 +347,20 @@ class SolarMLService:
         self.mqtt.loop_start()
 
     def read_latest_values(self, thing_id):
+        try:
+            result = self.read_latest_values_from_influx(thing_id)
+            if result:
+                return result
+        except Exception as e:
+            print(f"{thing_id}: не удалось прочитать InfluxDB: {e}")
+
+        try:
+            return self.read_latest_values_from_ditto(thing_id)
+        except Exception as e:
+            print(f"{thing_id}: не удалось прочитать Ditto: {e}")
+            return {}
+
+    def read_latest_values_from_influx(self, thing_id):
         field_filters = " or ".join([
             f'r["_field"] == "{field}"'
             for field in FIELDS.values()
@@ -341,6 +385,30 @@ from(bucket: "{self.args.influx_bucket}")
                 for short_name, influx_field in FIELDS.items():
                     if field == influx_field:
                         result[short_name] = value
+
+        return result
+
+    def read_latest_values_from_ditto(self, thing_id):
+        url = f"{self.args.ditto_url.rstrip('/')}/api/2/things/{thing_id}/features"
+        request = urllib.request.Request(url)
+
+        credentials = f"{self.args.ditto_user}:{self.args.ditto_password}".encode("utf-8")
+        auth_header = "Basic " + base64.b64encode(credentials).decode("ascii")
+        request.add_header("Authorization", auth_header)
+
+        with urllib.request.urlopen(request, timeout=10) as response:
+            features = json.loads(response.read().decode("utf-8"))
+
+        result = {}
+        for short_name, feature_name in DITTO_FEATURES.items():
+            value = (
+                features
+                .get(feature_name, {})
+                .get("properties", {})
+                .get("value")
+            )
+            if value is not None:
+                result[short_name] = value
 
         return result
 
@@ -418,7 +486,7 @@ from(bucket: "{self.args.influx_bucket}")
         values = self.read_latest_values(thing_id)
 
         if not values:
-            print(f"{thing_id}: нет данных в InfluxDB за последние 10 минут")
+            print(f"{thing_id}: нет данных ни в InfluxDB, ни в Ditto")
             return
 
         prediction = self.predict(values)
@@ -472,6 +540,9 @@ def main():
 
     parser.add_argument("--mqtt-host", default=DEFAULT_MQTT_HOST)
     parser.add_argument("--mqtt-port", type=int, default=DEFAULT_MQTT_PORT)
+    parser.add_argument("--ditto-url", default=DEFAULT_DITTO_URL)
+    parser.add_argument("--ditto-user", default=DEFAULT_DITTO_USER)
+    parser.add_argument("--ditto-password", default=DEFAULT_DITTO_PASSWORD)
 
     args = parser.parse_args()
 
@@ -502,12 +573,16 @@ Ctrl+O → Enter → Ctrl+X
 chmod +x ml_solar_service.py
 ```
 
-В строке `DEFAULT_INFLUX_TOKEN` вставляем токен вашей установки. Реальный токен лучше не хранить в публичной GitHub-репе.
+В строку `DEFAULT_INFLUX_TOKEN` не вставляем реальный токен, если этот файл потом попадет в GitHub. Токен лучше передавать при запуске.
+
+Получить Influx token можно так:
 
 ```bash
 kubectl get secret openegiz-influxdb2-auth \
     -o jsonpath='{.data.admin-token}' | base64 -d
 ```
+
+Сервис сначала пробует читать последние значения из InfluxDB. Если там еще нет данных или Telegraf задержался, он читает текущее состояние напрямую из Ditto. Для демо это удобно: ML не падает сразу, если история еще не успела записаться.
 
 ---
 
@@ -516,7 +591,10 @@ kubectl get secret openegiz-influxdb2-auth \
 Сначала запускаем только для одной станции:
 
 ```bash
-python3 ml_solar_service.py --thing-id summerschool:solar-site-001 --once
+python3 ml_solar_service.py \
+  --thing-id summerschool:solar-site-001 \
+  --once \
+  --influx-token "$(kubectl get secret openegiz-influxdb2-auth -o jsonpath='{.data.admin-token}' | base64 -d)"
 ```
 
 Если все нормально, увидим:
@@ -553,13 +631,20 @@ ml_last_run
 Для нашей станции:
 
 ```bash
-python3 ml_solar_service.py --thing-id summerschool:solar-site-001 --interval 15
+python3 ml_solar_service.py \
+  --thing-id summerschool:solar-site-001 \
+  --interval 15 \
+  --influx-token "$(kubectl get secret openegiz-influxdb2-auth -o jsonpath='{.data.admin-token}' | base64 -d)"
 ```
 
 Запуск в фоне:
 
 ```bash
-nohup python3 ml_solar_service.py --thing-id summerschool:solar-site-001 --interval 15 > ml_solar_service.log 2>&1 &
+nohup python3 ml_solar_service.py \
+  --thing-id summerschool:solar-site-001 \
+  --interval 15 \
+  --influx-token "$(kubectl get secret openegiz-influxdb2-auth -o jsonpath='{.data.admin-token}' | base64 -d)" \
+  > ml_solar_service.log 2>&1 &
 ```
 
 Смотреть логи:
@@ -588,7 +673,7 @@ kill PID
 3. Считает разницу между expected и actual.
 4. Считает anomaly score.
 5. Определяет статус: `normal`, `warning`, `critical`.
-6. Отправляет результат обратно в OpenEgiz.
+6. Отправляет результат обратно в OpenEgiz через `merge /features`.
 
 Для цифрового двойника это выглядит так, будто появился новый источник данных:
 
@@ -610,6 +695,15 @@ kill PID
 - ручной ввод
 
 Главное — все это приходит в один twin и становится частью общей картины.
+
+За счет `merge` обычные solar-поля не пропадают:
+
+```text
+bridge обновляет ac_power_mw, expected_power_mw, performance_ratio
+ML обновляет ml_predicted_power_mw, ml_anomaly_score, ml_health_status
+```
+
+Оба источника пишут в один twin, но каждый обновляет только свою часть.
 
 ---
 
