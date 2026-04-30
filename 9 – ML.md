@@ -727,8 +727,8 @@ ML обновляет ml_predicted_power_mw, ml_anomaly_score, ml_health_status
 ```text
 1. Time series: Actual vs Expected vs ML Prediction
 2. Gauge: Anomaly Score
-3. Stat: Health Status + Risk Level
-4. Table: ML summary по SITE_001
+3. Stat: Predicted Power + Power Gap
+4. Table: ML Status / Risk / Recommendation
 ```
 
 ---
@@ -821,7 +821,7 @@ Thresholds:
 
 ---
 
-## 8.3 Health Status и Risk Level
+## 8.3 Predicted Power и Power Gap
 
 Тип панели:
 
@@ -829,51 +829,44 @@ Thresholds:
 Stat
 ```
 
-Делаем две маленькие Stat панели рядом.
+Делаем одну Stat-панель с двумя числовыми значениями:
 
-Health Status:
-
-```flux
-from(bucket: "default")
-  |> range(start: -2m)
-  |> filter(fn: (r) => r["thingId"] == "summerschool:solar-site-001")
-  |> filter(fn: (r) => r["_field"] == "value_ml_health_status_properties_value")
-  |> last()
-  |> map(fn: (r) => ({r with _field: "Health Status"}))
-```
-
-Value mappings:
-
-```text
-normal   → NORMAL, green
-warning  → WARNING, yellow
-critical → CRITICAL, red
-```
-
-Risk Level:
+Query A — ML Prediction:
 
 ```flux
 from(bucket: "default")
   |> range(start: -2m)
   |> filter(fn: (r) => r["thingId"] == "summerschool:solar-site-001")
-  |> filter(fn: (r) => r["_field"] == "value_ml_risk_level_properties_value")
+  |> filter(fn: (r) => r["_field"] == "value_ml_predicted_power_mw_properties_value")
   |> last()
-  |> map(fn: (r) => ({r with _field: "Risk Level"}))
+  |> map(fn: (r) => ({r with _field: "ML Prediction (MW)"}))
 ```
 
-Value mappings:
+Query B — Expected Gap:
+
+```flux
+from(bucket: "default")
+  |> range(start: -2m)
+  |> filter(fn: (r) => r["thingId"] == "summerschool:solar-site-001")
+  |> filter(fn: (r) => r["_field"] == "value_ml_expected_power_gap_mw_properties_value")
+  |> last()
+  |> map(fn: (r) => ({r with _field: "Power Gap (MW)"}))
+```
+
+В настройках Stat:
 
 ```text
-low    → LOW, green
-medium → MEDIUM, yellow
-high   → HIGH, red
+Text mode: Value and name
+Calculation: Last *
 ```
+
+Health status и risk level не делаем отдельными Stat-панелями, потому что это строковые значения (`warning`, `medium`). Их лучше показывать в таблице.
 
 ---
 
-## 8.4 Таблица ML по SITE_001
+## 8.4 Таблица ML Status / Risk / Recommendation
 
-Делаем table:
+Теперь делаем table-панель. Она показывает последнюю ML-сводку по `SITE_001`: прогноз, gap, anomaly score, health status, risk level и рекомендацию.
 
 ```flux
 from(bucket: "default")
