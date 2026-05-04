@@ -74,7 +74,7 @@ GLB: https://gltf-viewer.donmccurdy.com/
 Дальше идем в:
 
 ```text
-Player -> Publishing Settings -> Compression Format
+Edit -> Project Settings -> Player -> Publishing Settings -> Compression Format
 ```
 
 Ставим:
@@ -568,6 +568,344 @@ File -> Build Profile -> Build
 ```
 
 Названия могут отличаться, но смысл один: эти файлы нужно загрузить на сервер OpenEgiz.
+
+
+
+
+
+
+
+
+Вот reproducible-инструкция, чтобы другой человек смог повторить перенос файлов с Windows в Debian VM через `scp`.
+
+# Windows → Debian VM через SSH/SCP
+
+## 0. Что должно быть
+
+На Windows есть файлы, например:
+
+```cmd
+C:\Users\SuperPC\My project\local_dev\Build\
+```
+
+Файлы:
+
+```cmd
+local_dev.data
+local_dev.framework.js
+local_dev.loader.js
+local_dev.wasm
+```
+
+В Debian VM нужен пользователь, например:
+
+```bash
+superuser
+```
+
+И папка назначения:
+
+```bash
+~/test/openegiz/build/
+```
+
+---
+
+# 1. Починить интернет/DNS в Debian, если `apt` не работает
+
+Если при `apt install` ошибка типа:
+
+```text
+Temporary failure resolving 'deb.debian.org'
+```
+
+Открой DNS-файл:
+
+```bash
+sudo nano /etc/resolv.conf
+```
+
+Сделай так:
+
+```text
+nameserver 1.1.1.1
+nameserver 8.8.8.8
+```
+
+Сохрани:
+
+```text
+Ctrl + O → Enter → Ctrl + X
+```
+
+Проверь:
+
+```bash
+ping -c 3 deb.debian.org
+```
+
+Потом:
+
+```bash
+sudo apt update
+```
+
+---
+
+# 2. Установить и запустить SSH-сервер в Debian VM
+
+Внутри Debian:
+
+```bash
+sudo apt update
+sudo apt install openssh-server
+sudo systemctl enable --now ssh
+```
+
+Проверить статус:
+
+```bash
+sudo systemctl status ssh
+```
+
+Должно быть что-то вроде:
+
+```text
+active (running)
+```
+
+Проверить, слушает ли порт 22:
+
+```bash
+ss -tlnp | grep :22
+```
+
+---
+
+# 3. Узнать IP Debian VM
+
+Внутри Debian:
+
+```bash
+ip a
+```
+
+Найди IP вида:
+
+```text
+192.168.xxx.xxx
+```
+
+Например:
+
+```text
+192.168.174.132
+```
+
+---
+
+# 4. Подготовить папку назначения в Debian
+
+Внутри Debian:
+
+```bash
+mkdir -p ~/test/openegiz/build
+```
+
+Проверить:
+
+```bash
+ls -la ~/test/openegiz/build
+```
+
+---
+
+# 5. Починить Windows SSH config, если OpenSSH ругается на права
+
+Если на Windows при `ssh` или `scp` ошибка:
+
+```text
+Bad permissions.
+Bad owner or permissions on C:\Users\SuperPC\.ssh\config
+```
+
+Вариант A — быстро отключить config:
+
+В CMD:
+
+```cmd
+ren "%USERPROFILE%\.ssh\config" config.bak
+```
+
+После этого `ssh/scp` перестанет читать проблемный config.
+
+Вариант B — починить права в CMD:
+
+```cmd
+takeown /f "%USERPROFILE%\.ssh\config"
+icacls "%USERPROFILE%\.ssh\config" /inheritance:r
+icacls "%USERPROFILE%\.ssh\config" /remove:g "*S-1-5-21-1359588999-4019590744-2463624882-3776730759"
+icacls "%USERPROFILE%\.ssh\config" /grant:r "%USERNAME%:F"
+icacls "%USERPROFILE%\.ssh\config" /grant:r "SYSTEM:F"
+icacls "%USERPROFILE%\.ssh\config" /grant:r "Administrators:F"
+```
+
+Важно: это именно **CMD**-синтаксис. В PowerShell переменные другие.
+
+---
+
+# 6. Проверить SSH-подключение с Windows
+
+В CMD:
+
+```cmd
+ssh superuser@192.168.174.132
+```
+
+Если видишь:
+
+```text
+Connection refused
+```
+
+значит SSH-сервер в Debian не запущен. Вернись к шагу 2.
+
+Если видишь запрос пароля — всё нормально.
+
+---
+
+# 7. Передать 4 файла через SCP
+
+В Windows CMD перейди в папку с файлами:
+
+```cmd
+cd "C:\Users\SuperPC\My project\local_dev\Build"
+```
+
+Передай файлы:
+
+```cmd
+scp local_dev.data local_dev.framework.js local_dev.loader.js local_dev.wasm superuser@192.168.174.132:~/test/openegiz/build/
+```
+
+Замени IP на актуальный IP своей Debian VM.
+
+---
+
+# 8. Проверить файлы в Debian
+
+Внутри Debian:
+
+```bash
+ls -lh ~/test/openegiz/build/
+```
+
+Должны быть:
+
+```text
+local_dev.data
+local_dev.framework.js
+local_dev.loader.js
+local_dev.wasm
+```
+
+---
+
+# Короткая версия команд
+
+## Debian VM
+
+```bash
+sudo nano /etc/resolv.conf
+```
+
+Вставить:
+
+```text
+nameserver 1.1.1.1
+nameserver 8.8.8.8
+```
+
+Потом:
+
+```bash
+sudo apt update
+sudo apt install openssh-server
+sudo systemctl enable --now ssh
+mkdir -p ~/test/openegiz/build
+ip a
+```
+
+## Windows CMD
+
+```cmd
+ren "%USERPROFILE%\.ssh\config" config.bak
+cd "C:\Users\SuperPC\My project\local_dev\Build"
+ssh superuser@192.168.174.132
+scp local_dev.data local_dev.framework.js local_dev.loader.js local_dev.wasm superuser@192.168.174.132:~/test/openegiz/build/
+```
+
+---
+
+# Типовые ошибки
+
+## `Bad owner or permissions on C:\Users\...\ssh\config`
+
+Проблема с правами Windows SSH config. Быстро:
+
+```cmd
+ren "%USERPROFILE%\.ssh\config" config.bak
+```
+
+## `Connection refused`
+
+Windows видит VM, но в Debian не работает SSH-сервер:
+
+```bash
+sudo apt install openssh-server
+sudo systemctl enable --now ssh
+```
+
+## `Temporary failure resolving deb.debian.org`
+
+DNS в Debian сломан:
+
+```bash
+sudo nano /etc/resolv.conf
+```
+
+Добавить:
+
+```text
+nameserver 1.1.1.1
+nameserver 8.8.8.8
+```
+
+## `No such file or directory`
+
+Папка назначения не создана:
+
+```bash
+mkdir -p ~/test/openegiz/build
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Загрузка build на сервер
 
