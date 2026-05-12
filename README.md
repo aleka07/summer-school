@@ -68,6 +68,8 @@ git clone https://github.com/aleka07/summer-school.git
 GitHub -> Code -> Download ZIP
 ```
 
+![Скачать материалы через Download ZIP](png/github-download-zip.png)
+
 После скачивания распакуйте архив в удобную папку.
 
 ### Шаг 3. Открыть папку в Obsidian
