@@ -14,9 +14,9 @@ https://github.com/openegiz/openegiz
 
 На схеме видно главный поток: устройства или генераторы данных отправляют значения через MQTT, дальше эти данные попадают в Ditto, сохраняются в InfluxDB и показываются в Grafana. OpenEgiz работает как интерфейс управления цифровыми двойниками.
 
-## Подготовка папки на VPS
+## Подготовка папки на VPS или VM
 
-Теперь заходим на наш VPS и создаем отдельную папку для тестовой установки.
+Теперь заходим на наш VPS или локальную виртуальную машину и создаем отдельную папку для тестовой установки.
 
 ```bash
 mkdir test
@@ -30,27 +30,40 @@ git clone https://github.com/openegiz/openegiz
 cd openegiz
 ```
 
-Если вам удобнее работать через IDE, можно открыть эту папку там. Но все команды мы будем запускать на сервере.
+Если вам удобнее работать через IDE, можно открыть эту папку там. Но все команды мы будем запускать внутри сервера или виртуальной машины.
 
 ## Установка Docker
 
-OpenEgiz поднимается в Kubernetes, но для сборки и работы нам нужен Docker. Сначала убираем старые пакеты, если они были установлены:
+OpenEgiz поднимается в Kubernetes, но для сборки и работы нам нужен Docker.
+
+Здесь важно не смешивать инструкции для разных систем:
+
+```text
+Debian VM  -> Docker repository для Debian
+Ubuntu VPS -> Docker repository для Ubuntu
+```
+
+Если на Ubuntu добавить Debian repository, установка может ломаться или тянуть неправильные пакеты.
+
+Сначала для любой системы убираем старые конфликтующие пакеты, если они были установлены:
 
 ```bash
 sudo apt remove $(dpkg --get-selections docker.io docker-compose docker-compose-v2 docker-doc podman-docker containerd runc | cut -f1)
 ```
 
-Дальше добавляем официальный Docker repository:
+Если `apt` скажет, что таких пакетов нет, это нормально.
+
+### Вариант A. Debian в локальной VM через VMware
+
+Если у вас локальная виртуальная машина на Debian, используем Docker repository именно для Debian:
 
 ```bash
-# Add Docker's official GPG key:
 sudo apt update
 sudo apt install ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-# Add the repository to Apt sources:
 sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
 Types: deb
 URIs: https://download.docker.com/linux/debian
@@ -63,10 +76,53 @@ EOF
 sudo apt update
 ```
 
-Теперь ставим Docker:
+### Вариант B. Ubuntu VPS или Ubuntu VM
+
+Если у вас Ubuntu, используем Docker repository именно для Ubuntu:
+
+```bash
+sudo apt update
+sudo apt install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+
+sudo apt update
+```
+
+### Ставим Docker
+
+После того как добавили правильный repository для своей системы, ставим Docker:
 
 ```bash
 sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+Проверяем, что Docker запустился:
+
+```bash
+sudo systemctl status docker
+```
+
+Если Docker не запустился сам:
+
+```bash
+sudo systemctl start docker
+```
+
+Можно проверить установку через тестовый контейнер:
+
+```bash
+sudo docker run hello-world
 ```
 
 Чтобы Docker можно было запускать без `sudo`, добавляем нашего пользователя в группу `docker`:
