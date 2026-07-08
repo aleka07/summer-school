@@ -8,15 +8,15 @@
 
 Сначала скачиваем Unity Hub под вашу операционную систему.
 
-![[Pasted image 20260427162628.png]]
+![](png/Pasted%20image%2020260427162628.png)
 
 Устанавливаем Unity Hub и авторизуемся.
 
-![[Pasted image 20260427162747.png]]
+![](png/Pasted%20image%2020260427162747.png)
 
 После этого ждем, пока Unity загрузится и установится.
 
-![[Pasted image 20260427162904.png]]
+![](png/Pasted%20image%2020260427162904.png)
 
 Пока Unity устанавливается, подготовим 3D-модель нашей лампочки.
 
@@ -47,9 +47,9 @@ GLB: https://gltf-viewer.donmccurdy.com/
 
 В Unity Hub слева открываем `Installs`, нажимаем `Manage`, потом `Add modules` и проверяем, установлен ли `Web Build Support`.
 
-![[Pasted image 20260427164014.png]]
+![](png/Pasted%20image%2020260427164014.png)
 
-![[Pasted image 20260427164110.png]]
+![](png/Pasted%20image%2020260427164110.png)
 
 Если Web Build Support не установлен, ставим его.
 
@@ -57,19 +57,19 @@ GLB: https://gltf-viewer.donmccurdy.com/
 
 Слева открываем `Projects`, нажимаем `New Project`.
 
-![[Pasted image 20260429105831.png]]
+![](png/Pasted%20image%2020260429105831.png)
 
 Выбираем 3D Universal шаблон.
 
-![[Pasted image 20260429105847.png]]
+![](png/Pasted%20image%2020260429105847.png)
 
 После создания проекта открываем настройки билда.
 
-![[Pasted image 20260427172033.png]]
+![](png/Pasted%20image%2020260427172033.png)
 
 Переключаем платформу на Web.
 
-![[Pasted image 20260427172106.png]]
+![](png/Pasted%20image%2020260427172106.png)
 
 Дальше идем в:
 
@@ -83,7 +83,7 @@ Edit -> Project Settings -> Player -> Publishing Settings -> Compression Format
 Disabled
 ```
 
-![[Pasted image 20260427172220.png]]
+![](png/Pasted%20image%2020260427172220.png)
 
 Это важно, чтобы потом WebGL build нормально отдавался с нашего сервера.
 
@@ -95,11 +95,11 @@ Disabled
 models
 ```
 
-![[Pasted image 20260427164641.png]]
+![](png/Pasted%20image%2020260427164641.png)
 
 Перетаскиваем туда наш `.obj` файл лампочки.
 
-![[Pasted image 20260427165235.png]]
+![](png/Pasted%20image%2020260427165235.png)
 
 Теперь добавляем модель на сцену.
 
@@ -111,7 +111,7 @@ models
 summerschool:lightbulb-01
 ```
 
-![[Pasted image 20260427165628.png]]
+![](png/Pasted%20image%2020260427165628.png)
 
 Если в названии будет лишний пробел или другая буква, связка может не сработать. Поэтому `thingId` копируем внимательно.
 
@@ -123,7 +123,7 @@ summerschool:lightbulb-01
 UniversalReceiver
 ```
 
-![[Pasted image 20260427165718.png]]
+![](png/Pasted%20image%2020260427165718.png)
 
 Открываем созданный файл и вставляем код:
 
@@ -328,11 +328,11 @@ void Start()
 
 Правая кнопка мыши по 3D-объекту слева в `Hierarchy`, дальше выбираем текстовый объект.
 
-![[Pasted image 20260427170655.png]]
+![](png/Pasted%20image%2020260427170655.png)
 
 Если Unity попросит импортировать TMP Essentials, импортируем верхний вариант.
 
-![[Pasted image 20260427170313.png]]
+![](png/Pasted%20image%2020260427170313.png)
 
 Выбираем `Canvas` слева в `Hierarchy`. Справа ставим:
 
@@ -341,7 +341,7 @@ Render Mode: World Space
 Event Camera: Main Camera
 ```
 
-![[Pasted image 20260429160026.png]]
+![](png/Pasted%20image%2020260429160026.png)
 
 После этого у `Canvas` ставим `Scale`:
 
@@ -353,11 +353,11 @@ Z: 0.01
 
 И размещаем текст за нашей лампочкой или рядом с ней.
 
-![[Pasted image 20260429160237.png]]
+![](png/Pasted%20image%2020260429160237.png)
 
 Теперь выбираем лампу, на которую уже добавили `UniversalReceiver`, и в поле `Status Label` перетаскиваем созданный `Text TMP`.
 
-![[Pasted image 20260427171507.png]]
+![](png/Pasted%20image%2020260427171507.png)
 
 ## Камера и zoom
 
@@ -444,7 +444,7 @@ public class CameraNavigator : MonoBehaviour
 
 Добавляем оба скрипта в `Assets`.
 
-![[Снимок экрана — 2026-04-29 в 16.06.27.png]]
+![](png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%E2%80%94%202026-04-29%20%D0%B2%2016.06.27.png)
 
 ## Collider на лампочке
 
@@ -456,13 +456,13 @@ public class CameraNavigator : MonoBehaviour
 Add Component -> Box Collider
 ```
 
-![[Снимок экрана — 2026-04-29 в 16.07.59.png]]
+![](png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%E2%80%94%202026-04-29%20%D0%B2%2016.07.59.png)
 
-![[Pasted image 20260429160858.png]]
+![](png/Pasted%20image%2020260429160858.png)
 
 После этого настраиваем размер collider так, чтобы он покрывал лампочку.
 
-![[Снимок экрана — 2026-04-29 в 16.09.19.png]]
+![](png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%E2%80%94%202026-04-29%20%D0%B2%2016.09.19.png)
 
 Дальше открываем:
 
@@ -470,7 +470,7 @@ Add Component -> Box Collider
 Edit -> Project Settings
 ```
 
-![[Pasted image 20260429161410.png]]
+![](png/Pasted%20image%2020260429161410.png)
 
 В `Player -> Other Settings -> Active Input Handling` ставим:
 
@@ -478,9 +478,9 @@ Edit -> Project Settings
 Both
 ```
 
-![[Снимок экрана — 2026-04-29 в 16.15.02.png]]
+![](png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%E2%80%94%202026-04-29%20%D0%B2%2016.15.02.png)
 
-![[Снимок экрана — 2026-04-29 в 16.16.11.png]]
+![](png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%E2%80%94%202026-04-29%20%D0%B2%2016.16.11.png)
 
 ## Точка приближения
 
@@ -490,11 +490,11 @@ Both
 Hierarchy -> summerschool:lightbulb-01 -> Create Empty
 ```
 
-![[Pasted image 20260429161822.png]]
+![](png/Pasted%20image%2020260429161822.png)
 
 Обязательно выбираем этот пустой объект слева в `Hierarchy`.
 
-![[Pasted image 20260429163351.png]]
+![](png/Pasted%20image%2020260429163351.png)
 
 В сцене зажимаем правую кнопку мыши и подлетаем ближе к объекту. Для движения используем `WASD`. Когда нашли удобный ракурс, нажимаем:
 
@@ -511,7 +511,7 @@ zoomed_view
 
 Теперь выбираем лампу, добавляем на нее скрипт `ClickToZoom`, и в поле `My View Point` перетаскиваем `zoomed_view`.
 
-![[Снимок экрана — 2026-04-29 в 16.11.25.png]]
+![](png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%E2%80%94%202026-04-29%20%D0%B2%2016.11.25.png)
 
 ## Общий вид камеры
 
@@ -530,7 +530,7 @@ Windows: Ctrl + Shift + F
 Mac: Cmd + Shift + F
 ```
 
-![[Снимок экрана — 2026-04-29 в 16.25.33.png]]
+![](png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%E2%80%94%202026-04-29%20%D0%B2%2016.25.33.png)
 
 Дальше:
 
@@ -538,7 +538,7 @@ Mac: Cmd + Shift + F
 2. Перетаскиваем скрипт `CameraNavigator` в компоненты камеры.
 3. В `Overview Point` выбираем `global_view`.
 
-![[Снимок экрана — 2026-04-29 в 16.27.11.png]]
+![](png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%E2%80%94%202026-04-29%20%D0%B2%2016.27.11.png)
 
 ## Сборка WebGL
 
@@ -552,11 +552,11 @@ File -> Build Profile -> Build
 
 И сохраняем build в удобную папку.
 
-![[Pasted image 20260427172315.png]]
+![](png/Pasted%20image%2020260427172315.png)
 
 После сборки открываем папку build. Нам нужны эти файлы:
 
-![[Pasted image 20260427172758.png]]
+![](png/Pasted%20image%2020260427172758.png)
 
 Обычно это:
 
@@ -911,7 +911,7 @@ mkdir -p ~/test/openegiz/build
 
 Через SSH или Google Cloud upload закидываем файлы build на сервер.
 
-![[Pasted image 20260427173232.png]]
+![](png/Pasted%20image%2020260427173232.png)
 
 После загрузки выходим в домашнюю директорию, пока не окажемся примерно здесь:
 
@@ -919,7 +919,7 @@ mkdir -p ~/test/openegiz/build
 cd ..
 ```
 
-![[Pasted image 20260427174920.png]]
+![](png/Pasted%20image%2020260427174920.png)
 
 Командой `ls` проверяем, что файлы на месте. Потом переносим их в папку `build` внутри OpenEgiz:
 
@@ -964,7 +964,7 @@ Access links:
   http://10.186.0.2:30530/build/1.wasm
 ```
 
-![[Pasted image 20260427175119.png]]
+![](png/Pasted%20image%2020260427175119.png)
 
 Эти ссылки потом понадобятся в Grafana, чтобы Unity-панель поняла, где лежит WebGL build.
 
@@ -972,11 +972,11 @@ Access links:
 
 Теперь идем в Grafana, создаем дашборд, нажимаем `Add visualisation` и выбираем визуализацию OpenEgiz.
 
-![[Pasted image 20260427175228.png]]
+![](png/Pasted%20image%2020260427175228.png)
 
 В типе визуализации выбираем `Unity`.
 
-![[Pasted image 20260427175307.png]]
+![](png/Pasted%20image%2020260427175307.png)
 
 Внизу вставляем Flux-запрос, который берет последние значения лампочки:
 
@@ -1002,11 +1002,11 @@ from(bucket: "default")
 
 Справа в настройках `Visualization Unity` заполняем адреса нашего build.
 
-![[Pasted image 20260427181903.png]]
+![](png/Pasted%20image%2020260427181903.png)
 
 Заполняем поля:
 
-![[Pasted image 20260427182032.png]]
+![](png/Pasted%20image%2020260427182032.png)
 
 Еще раз проверяем `thingId`. Он должен совпадать с названием объекта в Unity:
 
@@ -1016,6 +1016,6 @@ summerschool:lightbulb-01
 
 Лишний пробел, другая буква или другое имя объекта могут сломать отображение данных.
 
-![[Pasted image 20260429110536.png]]
+![](png/Pasted%20image%2020260429110536.png)
 
 В конце у нас должна получиться 3D-сцена, которая открывается в Grafana и получает актуальные данные лампочки из OpenEgiz.

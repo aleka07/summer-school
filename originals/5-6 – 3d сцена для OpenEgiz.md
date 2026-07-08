@@ -3,18 +3,18 @@ Unity
 
 качаем unity для нашей машины, для вашей ОС
 
-![[Pasted image 20260427162628.png]]
+![](../png/Pasted%20image%2020260427162628.png)
 
 скачали, теперь устанавливаем 
 
 
 авторизуемся
-![[Pasted image 20260427162747.png]]
+![](../png/Pasted%20image%2020260427162747.png)
 
 
 
 Ждем загрузку Unity
-![[Pasted image 20260427162904.png]]
+![](../png/Pasted%20image%2020260427162904.png)
 
 
 а пока грузится unity сделаем 3д модельку нашей лампочки
@@ -33,40 +33,40 @@ https://gltf-viewer.donmccurdy.com/ для glb
 модели есть теперь идем в unity
 
 заходим в install слева, жмем "Manage" дальше "add modules" и смотрим установлена ли Web Build Support поддержка, если нет то устанавливаем
-![[Pasted image 20260427164014.png]]
-![[Pasted image 20260427164110.png]]
+![](../png/Pasted%20image%2020260427164014.png)
+![](../png/Pasted%20image%2020260427164110.png)
 
 слева Projects дальше New Project
-![[Pasted image 20260429105831.png]]
+![](../png/Pasted%20image%2020260429105831.png)
 
 создали 3д universal шаблон
-![[Pasted image 20260429105847.png]]
+![](../png/Pasted%20image%2020260429105847.png)
 Files надо выбрать вот это
-![[Pasted image 20260427172033.png]]
+![](../png/Pasted%20image%2020260427172033.png)
 вот здесьь свитчаемся на web
-![[Pasted image 20260427172106.png]]
+![](../png/Pasted%20image%2020260427172106.png)
 
 Player –> Publishing Settings –> Compression Formant: Disabled
-![[Pasted image 20260427172220.png]]
+![](../png/Pasted%20image%2020260427172220.png)
 
 снизу в окне Assets создадим папку models
-![[Pasted image 20260427164641.png]]
+![](../png/Pasted%20image%2020260427164641.png)
 
 
 закинем в нее наш obj файл лампочки (ссылку на наш объект лампочки)
-![[Pasted image 20260427165235.png]]
+![](../png/Pasted%20image%2020260427165235.png)
 
 
 
 нужно переимновать лампочку под thingid с графаны это (критично важно)
-![[Pasted image 20260427165628.png]]
+![](../png/Pasted%20image%2020260427165628.png)
 summerschool:lightbulb-01
 в моем случае
 
 
 
 сейчас создадим скрипт на C# (на него тоже ссылку надо дать)
-![[Pasted image 20260427165718.png]]
+![](../png/Pasted%20image%2020260427165718.png)
 дважды нажмите на созданный файл и он откроектся в вашем текстовом редакторе
 
 ```C#
@@ -266,22 +266,22 @@ void Start()
 
 далее создаем text mesh pro, правая кнопка мыши на 3д объект слева, в списке
 
-![[Pasted image 20260427170655.png]]
+![](../png/Pasted%20image%2020260427170655.png)
 
 импортируем только верхний
-![[Pasted image 20260427170313.png]]
+![](../png/Pasted%20image%2020260427170313.png)
 Нажать Canvas слева в Hierarchy. В меню справа надо выбрать Render mode World Space. Также Event Camera точку справа нажать выбрать main camera
-![[Pasted image 20260429160026.png]]
+![](../png/Pasted%20image%2020260429160026.png)
 
 
 после этого Scale нашего Canvas делаем 0.01 по всем осям и ставим за нашей лампочкой
-![[Pasted image 20260429160237.png]]
+![](../png/Pasted%20image%2020260429160237.png)
 
 
 
 
 выбрали слева нашу лампу, справа надо заполнить Status Label, выбрав Text TMP который мы до этого создали только что
-![[Pasted image 20260427171507.png]]
+![](../png/Pasted%20image%2020260427171507.png)
 Далее сделаем анимацию для камеры. надо добавить два скрипта.
 
 **ClickToZoom.cs**
@@ -360,29 +360,29 @@ public class CameraNavigator : MonoBehaviour
 ```
 
 добавили эти два скрипта в наши Assets
-![[Снимок экрана — 2026-04-29 в 16.06.27.png]]
+![](../png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%E2%80%94%202026-04-29%20%D0%B2%2016.06.27.png)
 
 Выбираем нашу лампу в Иерархии слева, далее add component –> Box Colider
-![[Снимок экрана — 2026-04-29 в 16.07.59.png]]
-![[Pasted image 20260429160858.png]]
+![](../png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%E2%80%94%202026-04-29%20%D0%B2%2016.07.59.png)
+![](../png/Pasted%20image%2020260429160858.png)
 
 Жмем 1ое, и далее натягиваем куб на нашу лампочку
-![[Снимок экрана — 2026-04-29 в 16.09.19.png]]
+![](../png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%E2%80%94%202026-04-29%20%D0%B2%2016.09.19.png)
 
 Edit –> Project Settings
-![[Pasted image 20260429161410.png]]
+![](../png/Pasted%20image%2020260429161410.png)
 
 
 Player –> Other Settings –> Active input handiling –> Both
-![[Снимок экрана — 2026-04-29 в 16.15.02.png]]
-![[Снимок экрана — 2026-04-29 в 16.16.11.png]]
+![](../png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%E2%80%94%202026-04-29%20%D0%B2%2016.15.02.png)
+![](../png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%E2%80%94%202026-04-29%20%D0%B2%2016.16.11.png)
 
 надо создать "Empty" внутри нашей лампочки: Hierarchy –> "summerschool:lightbulb-01" 
-![[Pasted image 20260429161822.png]]
+![](../png/Pasted%20image%2020260429161822.png)
 
 
 ОБЯЗАТЕЛЬНО выбрать пустой обеъкт слева в Иерархии 
-![[Pasted image 20260429163351.png]]
+![](../png/Pasted%20image%2020260429163351.png)
 В самой 3д сцене, ЗАЖАВ ПКМ (Правую Кнопку Мыши) летим ближе к объекту (используем WASD для управления). как только подлетели ближе и решили что ракурс удобный жмем шорткат:
 
 - **Windows:** `Ctrl + Shift + F`
@@ -397,7 +397,7 @@ Player –> Other Settings –> Active input handiling –> Both
 
 
 далее, выбираем нашу лампу (шаг 1), перетаскиваем наш скрипт ClickToZoom (шаг 2), и выбираем ранее созданный zoomed_view на "My View Point"
-![[Снимок экрана — 2026-04-29 в 16.11.25.png]]
+![](../png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%E2%80%94%202026-04-29%20%D0%B2%2016.11.25.png)
 
 
 Снова в нашей сцене зажав ПКМ отлетаем назад. дав больше места для камеры/обзора камеры. в Hierarchy слева уже глобально вне нашей лампы снова создаем Empty Object, назовем его global_view. выбрав его снова жмем шорткат
@@ -406,14 +406,14 @@ Player –> Other Settings –> Active input handiling –> Both
     
 - **Mac:** `Cmd + Shift + F`
 
-![[Снимок экрана — 2026-04-29 в 16.25.33.png]]
+![](../png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%E2%80%94%202026-04-29%20%D0%B2%2016.25.33.png)
 
 
 Далее
 1 – выбрали Main Camera
 2 – перетянули скрипт из  "CameraNavigator" направо в компоненты Main Camera
 3 – Выбрали Overview Point - global_view
-![[Снимок экрана — 2026-04-29 в 16.27.11.png]]
+![](../png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%E2%80%94%202026-04-29%20%D0%B2%2016.27.11.png)
 
 
 
@@ -423,17 +423,17 @@ Player –> Other Settings –> Active input handiling –> Both
 Далее билдим наш проект
 
 File –> Build Profile, Build и сохраняем там где нам удобно
-![[Pasted image 20260427172315.png]]
+![](../png/Pasted%20image%2020260427172315.png)
 
 
 
 заходим в наш билд и нам нужны 4 этих файла
-![[Pasted image 20260427172758.png]]
+![](../png/Pasted%20image%2020260427172758.png)
 
 
 ___
 2-ой день
-![[Pasted image 20260427173232.png]]
+![](../png/Pasted%20image%2020260427173232.png)
 через ssh от гугл cloude закидываем наши 4 файла в папку build в корне проекте OpenEgiz
 
 
@@ -442,7 +442,7 @@ ___
 cd ..
 ```
 пока мы не дойдем до ~$
-![[Pasted image 20260427174920.png]]
+![](../png/Pasted%20image%2020260427174920.png)
 пишем команду ls видим все наши файлы и двигаем их через mv
 дальше через команду mv двигаем 
 ```bash
@@ -481,11 +481,11 @@ developerbeck5@super:~/test/openegiz$
 ```
 
 
-![[Pasted image 20260427175119.png]]
+![](../png/Pasted%20image%2020260427175119.png)
 идем в графану, создаем дашборд, Add visualisation, opentwins
-![[Pasted image 20260427175228.png]]
+![](../png/Pasted%20image%2020260427175228.png)
 выбираем Unity
-![[Pasted image 20260427175307.png]]
+![](../png/Pasted%20image%2020260427175307.png)
 
 снизу пишем вот это 
 ```flux
@@ -510,17 +510,17 @@ from(bucket: "default")
 
 
 пишем адреса нашего билда в окно справа, Visualization Unity
-![[Pasted image 20260427181903.png]]
+![](../png/Pasted%20image%2020260427181903.png)
 
 
 
 
 Заполняем поля
-![[Pasted image 20260427182032.png]]
+![](../png/Pasted%20image%2020260427182032.png)
 
 
 
 надо быть очень внимательным на счет thingID имени потому что лишний пробел может все сломать
 
 
-![[Pasted image 20260429110536.png]]
+![](../png/Pasted%20image%2020260429110536.png)

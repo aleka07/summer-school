@@ -2,45 +2,45 @@
 Google cloud дает 300 долларов на 90 дней
 не нажимаем на активацию в правом верхнем углу, она нам не нужна
 https://console.cloud.google.com
-![[Снимок экрана 2026-04-08 в 16.38.24.png|677]]
+<img src="../png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-04-08%20%D0%B2%2016.38.24.png" width="677">
 
 
 Заходим в пойск и ищем compute Engine
-![[Pasted image 20260408163914.png]]
+![](../png/Pasted%20image%2020260408163914.png)
 
 
 
 Если эта штука вышла, жмем Go to settings
-![[Pasted image 20260408163940.png]]
+![](../png/Pasted%20image%2020260408163940.png)
 попросил пройти нас двухэтапную аутентефикацию, проходим ее
 
 
 
 
 После того как добавили двухэтапную аутентефикацию, переходим еще раз в Comput Engine, и выбираем VM instances
-![[Снимок экрана 2026-04-08 в 16.40.34.png]]
+![](../png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-04-08%20%D0%B2%2016.40.34.png)
 
 
 Тут снова вылезет че то, жмем Enable, и ждем
-![[Pasted image 20260408164137.png]]
+![](../png/Pasted%20image%2020260408164137.png)
 тут Enable надо нажать
 
 
 
 
 Create Instance, после того как выбрали VM instances
-![[Pasted image 20260408164546.png]]
+![](../png/Pasted%20image%2020260408164546.png)
 
 
 
 Конфигурируем, как на скриншоте, название свое можно задать, Регион Warsaw, 
-![[Pasted image 20260408165024.png]]
+![](../png/Pasted%20image%2020260408165024.png)
 
 
 
 
 e2 server 4vCPU 16Gb memory для наших целей нужно
-![[Pasted image 20260408165039.png|697]]
+<img src="../png/Pasted%20image%2020260408165039.png" width="697">
 
 
 
@@ -48,27 +48,27 @@ e2 server 4vCPU 16Gb memory для наших целей нужно
 далее Os and Storage справа, Ubuntu 24.04 LTS, обязательно x86 вариант надо выбрать.
 также 40гб памяти
 
-![[Pasted image 20260408165343.png|697]]
+<img src="../png/Pasted%20image%2020260408165343.png" width="697">
 
 
 
 
 no backups – у вас не будет шанса на ошибку :)
-![[Pasted image 20260408165500.png|697]]
+<img src="../png/Pasted%20image%2020260408165500.png" width="697">
 
 
 
 Выстваляем настройки Networking как на скриншоте. дальше по идее жмем create
-![[Pasted image 20260408165706.png]]
+![](../png/Pasted%20image%2020260408165706.png)
 
 
 
 
 
 получили external ip и наша Виртуальная машина готова! 
-![[Pasted image 20260408165913.png]]
+![](../png/Pasted%20image%2020260408165913.png)
 1) Для нормисов – просто жмем SSH справа от виртуальной машины. и все мы в терминале, мы прекрасны
-![[Pasted image 20260409100714.png]]
+![](../png/Pasted%20image%2020260409100714.png)
 2) для  the людей – 
 
 дальше что делаем, Linux/MacOS для винды надо думать

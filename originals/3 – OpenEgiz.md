@@ -148,12 +148,12 @@ make install
 
 
 
-![[Pasted image 20260409101354.png]]
+![](../png/Pasted%20image%2020260409101354.png)
 
 
 дальше заходим по public айпи 30718 порт
 пример http://34.118.106.123:30718/a/ertis-opentwins-app/policies
-![[Pasted image 20260409104529.png]]
+![](../png/Pasted%20image%2020260409104529.png)
 
 логин/пароль admin/admin
 

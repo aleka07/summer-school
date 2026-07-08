@@ -4,7 +4,7 @@
 
 Открываем Grafana и заходим в `Dashboards`.
 
-![[Pasted image 20260428164128.png]]
+![](png/Pasted%20image%2020260428164128.png)
 
 Создаем новый дашборд для:
 

@@ -31,7 +31,7 @@ Google Cloud обычно дает бесплатные кредиты на пе
 $300 credits на 90 дней
 ```
 
-![[Снимок экрана 2026-04-08 в 16.38.24.png|677]]
+<img src="png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-04-08%20%D0%B2%2016.38.24.png" width="677">
 
 Важный момент: если у вас сверху есть кнопка `Activate`, пока не нажимаем ее без необходимости. Нам для курса достаточно trial-режима.
 
@@ -47,7 +47,7 @@ $300 credits на 90 дней
 Compute Engine
 ```
 
-![[Pasted image 20260408163914.png]]
+![](png/Pasted%20image%2020260408163914.png)
 
 Выбираем Compute Engine.
 
@@ -59,7 +59,7 @@ Compute Engine
 
 У некоторых аккаунтов может появиться сообщение, что доступ к Google Cloud заблокирован до включения 2-step verification.
 
-![[Pasted image 20260408163940.png]]
+![](png/Pasted%20image%2020260408163940.png)
 
 Если такое появилось, нажимаем:
 
@@ -81,7 +81,7 @@ Go to settings
 Compute Engine → VM instances
 ```
 
-![[Снимок экрана 2026-04-08 в 16.40.34.png]]
+![](png/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-04-08%20%D0%B2%2016.40.34.png)
 
 VM instances — это список наших виртуальных машин.
 
@@ -97,7 +97,7 @@ VM instances — это список наших виртуальных маши�
 Enable
 ```
 
-![[Pasted image 20260408164137.png]]
+![](png/Pasted%20image%2020260408164137.png)
 
 Ждем, пока сервис включится.
 
@@ -113,7 +113,7 @@ Enable
 Create instance
 ```
 
-![[Pasted image 20260408164546.png]]
+![](png/Pasted%20image%2020260408164546.png)
 
 Откроется форма создания VM.
 
@@ -135,7 +135,7 @@ openegiz-vps
 europe-central2 (Warsaw)
 ```
 
-![[Pasted image 20260408165024.png]]
+![](png/Pasted%20image%2020260408165024.png)
 
 Название можно задать свое. Главное, чтобы потом было понятно, что это сервер для OpenEgiz.
 
@@ -162,7 +162,7 @@ E2
 e2-standard-4
 ```
 
-![[Pasted image 20260408165039.png|697]]
+<img src="png/Pasted%20image%2020260408165039.png" width="697">
 
 Почему не меньше:
 
@@ -192,7 +192,7 @@ Ubuntu 24.04 LTS
 40 GB
 ```
 
-![[Pasted image 20260408165343.png|697]]
+<img src="png/Pasted%20image%2020260408165343.png" width="697">
 
 40 GB нам достаточно для установки OpenEgiz, Docker, Kubernetes и базовых данных.
 
@@ -206,7 +206,7 @@ Ubuntu 24.04 LTS
 No backups
 ```
 
-![[Pasted image 20260408165500.png|697]]
+<img src="png/Pasted%20image%2020260408165500.png" width="697">
 
 Для учебного стенда этого достаточно.
 
@@ -235,7 +235,7 @@ Allow HTTPS traffic
 IP forwarding
 ```
 
-![[Pasted image 20260408165706.png]]
+![](png/Pasted%20image%2020260408165706.png)
 
 После этого нажимаем:
 
@@ -251,7 +251,7 @@ Create
 
 После создания VM появится в списке.
 
-![[Pasted image 20260408165913.png]]
+![](png/Pasted%20image%2020260408165913.png)
 
 Здесь нам важны две вещи:
 
@@ -282,7 +282,7 @@ SSH
 
 справа от виртуальной машины.
 
-![[Pasted image 20260409100714.png]]
+![](png/Pasted%20image%2020260409100714.png)
 
 Откроется браузерный терминал.
 

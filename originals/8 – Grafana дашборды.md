@@ -1,6 +1,6 @@
 
 Заходим в нашу Графана. в Dashboards
-![[Pasted image 20260428164128.png]]
+![](../png/Pasted%20image%2020260428164128.png)
 
 ## 2. Дашборд: Лампочка (Lightbulb Monitoring)
 
